@@ -1,0 +1,20 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using OwnerPermission.Models;
+
+namespace OwnerPermission.Services
+{
+    public class DocumentAuthorizationCrudHandler : AuthorizationHandler<OperationAuthorizationRequirement, Document>
+    {
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, Document resource)
+        {
+           if(context.User.Identity?.Name!.ToLower() == resource.Author &&
+                requirement.Name == Operations.Read.Name)
+            {
+                context.Succeed(requirement);
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+}
